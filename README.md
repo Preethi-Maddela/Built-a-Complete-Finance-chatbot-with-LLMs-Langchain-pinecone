@@ -1,131 +1,63 @@
-# Built-a-Complete-Finance-chatbot-with-LLMs-Langchain-pinecone
-# How to run?
-### STEPS:
+# Finance AI Chatbot with LLMs, LangChain & Pinecone
 
-Clone the repository
+An AI-powered finance assistant that combines Retrieval-Augmented Generation (RAG) with deterministic financial calculators. It answers banking and finance questions grounded in real bank policy documents, and performs EMI, loan eligibility, and maximum loan calculations using precise formulas — not LLM guesswork.
 
+## Features
+
+- **RAG-based Q&A** — answers questions about loans, credit cards, ATMs, and RBI policies using your own PDF documents as the knowledge source
+- **EMI Calculator** — instantly computes monthly installment, total payment, and total interest for a loan
+- **Loan Eligibility Check** — evaluates whether a requested loan fits within standard FOIR (Fixed Obligation to Income Ratio) limits
+- **Max Eligible Loan Estimator** — estimates the maximum loan amount an applicant could likely be approved for
+- Automatically detects whether a question needs document retrieval or a financial calculation, and routes it accordingly
+
+## Tech Stack
+
+- **Python**
+- **LangChain** — RAG orchestration and chains
+- **Groq (Llama 3.3 70B)** — LLM for response generation
+- **Pinecone** — vector database for semantic search
+- **HuggingFace Sentence Transformers** — embedding model (`all-MiniLM-L6-v2`)
+- **FastAPI** — backend API framework
+- **Uvicorn** — ASGI server
+
+## How to run?
+
+### STEP 01 - Clone the repository
 ```bash
-git clonehttps://github.com/Preethi-Maddela/Built-a-Complete-Finance-chatbot-with-LLMs-Langchain-pinecone.git
+git clone https://github.com/Preethi-Maddela/Built-a-Complete-Finance-chatbot-with-LLMs-Langchain-pinecone.git
+cd Built-a-Complete-Finance-chatbot-with-LLMs-Langchain-pinecone
 ```
-### STEP 01- Create a conda environment after opening the repository
 
+### STEP 02 - Create a conda environment
 ```bash
 conda create -n financebot python=3.10 -y
-```
-
-```bash
 conda activate financebot
 ```
 
-
-### STEP 02- install the requirements
+### STEP 03 - Install the requirements
 ```bash
 pip install -r requirements.txt
 ```
 
-
-### Create a `.env` file in the root directory and add your Pinecone & openai credentials as follows:
-
+### STEP 04 - Create a `.env` file in the root directory
+Add your Pinecone and Groq API keys:
 ```ini
-PINECONE_API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-GROQ_API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+PINECONE_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+GROQ_API_KEY="xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
+### STEP 05 - Add your PDF documents
+Place your finance/banking PDF documents inside the `data/` folder.
 
+### STEP 06 - Store embeddings in Pinecone
 ```bash
-# run the following command to store embeddings to pinecone
 python store_index.py
 ```
 
+### STEP 07 - Run the application
 ```bash
-# Finally run the following command
-python app.py
+uvicorn app:app --reload
 ```
 
-Now,
-```bash
-open up localhost:
-```
-
-
-### Techstack Used:
-
-- Python
-- LangChain
-- Flask
-- GPT
-- Pinecone
-
-
-
-# Azure-CICD-Deployment-with-Github-Actions
-
-## 1. Login to Azure Portal.
-
-## 2. Create a Service Principal for deployment
-
-	#with specific access
-
-	1. Azure Container Registry access : To push/pull docker images
-
-	2. Azure Container Apps / App Service access : To deploy and run the container
-
-
-	#Description: About the deployment
-
-	1. Build docker image of the source code
-
-	2. Push your docker image to Azure Container Registry (ACR)
-
-	3. Create/Configure Azure Container App
-
-	4. Pull your image from ACR into the Container App
-
-	5. Launch your docker image on Azure Container Apps
-
-	#Role Assignments:
-
-	1. AcrPush
-
-	2. Contributor
-
-	
-## 3. Create Azure Container Registry (ACR) to store/save docker image
-    - Save the Login Server URI: financechatbotacr.azurecr.io/financebot
-
-	
-## 4. Create Azure Container App Environment 
-
-## 5. Configure the Container App to pull and run the Docker image:
-	
-	
-	#optional
-
-	az acr login --name financechatbotacr
-
-	
-	#required
-
-	az acr build --registry financechatbotacr --image financebot:latest .
-
-	az containerapp create --name financebot --resource-group finance-rg \
-	  --image financechatbotacr.azurecr.io/financebot:latest \
-	  --target-port 8000 --ingress external
-
-	az containerapp update --name financebot --resource-group finance-rg \
-	  --image financechatbotacr.azurecr.io/financebot:latest
-	
-# 6. Configure GitHub Actions as the deployment runner:
-    settings > secrets and variables > actions > new repository secret > add Azure credentials one by one
-
-
-# 7. Setup github secrets:
-
-   - AZURE_CLIENT_ID
-   - AZURE_TENANT_ID
-   - AZURE_SUBSCRIPTION_ID
-   - ACR_LOGIN_SERVER
-   - ACR_USERNAME
-   - ACR_PASSWORD
-   - PINECONE_API_KEY
-   - OPENAI_API_KEY
+### STEP 08 - Open the app
+Open your browser and go to:
